@@ -20,3 +20,8 @@
 -fx-background-radius:3px;
 -fx-cursor:hand;
 }
+
+/* dashboard.css */
+FontIcon {
+    -fx-fill: white;
+}

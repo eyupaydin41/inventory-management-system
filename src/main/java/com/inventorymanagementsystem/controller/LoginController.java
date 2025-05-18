@@ -1,4 +1,4 @@
-package com.inventorymanagementsystem;
+package com.inventorymanagementsystem.controller;
 
 import com.inventorymanagementsystem.entity.User;
 import com.inventorymanagementsystem.config.Database;
@@ -8,9 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -84,7 +82,7 @@ public class LoginController implements Initializable {
                 alert.setContentText("Login Successful !");
                 alert.showAndWait();
                 login_btn.getScene().getWindow().hide();
-                Parent root = FXMLLoader.load(getClass().getResource("dashboard.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/inventorymanagementsystem/dashboard.fxml"));
                 Scene scene = new Scene(root);
                 Stage stage=new Stage();
 

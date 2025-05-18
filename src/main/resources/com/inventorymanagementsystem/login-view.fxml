@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="694.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inventorymanagementsystem.LoginController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="694.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inventorymanagementsystem.controller.LoginController">
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="1080.0">
          <children>
@@ -37,10 +37,9 @@
                               <Font size="20.0" />
                            </font>
                         </Button>
-                        <FontAwesomeIconView fill="#229459" glyphName="USERS" layoutX="372.0" layoutY="234.0" selectionFill="#2f466b" size="98" text="" wrappingWidth="112.22855949401855" />
                         <Button alignment="CENTER" contentDisplay="RIGHT" layoutX="741.0" layoutY="14.0" mnemonicParsing="false" onAction="#onExit" onMouseClicked="#onExit" onMouseDragged="#onExit" prefHeight="29.0" prefWidth="50.0" styleClass="close" stylesheets="@login.css">
                            <graphic>
-                              <FontAwesomeIconView fill="WHITE" glyphName="CLOSE" size="16.0" />
+                              <FontIcon iconLiteral="fas-sign-out-alt"/>
                            </graphic>
                         </Button>
                      </children>

@@ -6,16 +6,15 @@ module com.inventorymanagementsystem{
     requires javafx.media;
     requires java.base;
 
-
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
-    requires validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires java.sql;
     requires jasperreports;
     requires org.burningwave.core;
+
 
     opens com.inventorymanagementsystem to javafx.fxml;
     exports com.inventorymanagementsystem;
@@ -25,4 +24,6 @@ module com.inventorymanagementsystem{
     opens com.inventorymanagementsystem.config to javafx.fxml;
     exports com.inventorymanagementsystem.app;
     opens com.inventorymanagementsystem.app to javafx.fxml;
+    exports com.inventorymanagementsystem.controller;
+    opens com.inventorymanagementsystem.controller to javafx.fxml;
 }

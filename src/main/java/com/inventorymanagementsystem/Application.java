@@ -8,8 +8,6 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
-import static org.burningwave.core.assembler.StaticComponentContainer.Modules;
-
 public class Application extends javafx.application.Application {
 
     private double x;
@@ -19,7 +17,7 @@ public class Application extends javafx.application.Application {
     public void start(Stage stage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("login-view.fxml"));
         Scene scene = new Scene(root);
-        stage.setTitle("Fashion Club Inventory Management System");
+        stage.setTitle("Inventory Management System");
         root.setOnMousePressed((event)->{
             x=event.getSceneX();
             y=event.getSceneY();
