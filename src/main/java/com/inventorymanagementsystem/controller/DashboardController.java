@@ -27,11 +27,12 @@ import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.burningwave.core.assembler.StaticComponentContainer.Modules;
 
@@ -52,11 +53,31 @@ public class DashboardController implements Initializable {
     private Button dashboard_btn;
 
     @FXML
+    private Button stock_btn;
+
+    @FXML
+    private AnchorPane stock_pane;
+
+    @FXML
+    private TableColumn<?, ?> product_col_id;
+
+    @FXML
+    private TableColumn<?, ?> product_col_item_num;
+
+    @FXML
+    private TableColumn<?, ?> product_col_shop_details;
+
+    @FXML
+    private TableColumn<?, ?> product_col_quantity;
+
+    @FXML
+    private TableColumn<?, ?> product_col_price;
+
+    @FXML
     private AnchorPane customer_pane;
 
     @FXML
     private AnchorPane dasboard_pane;
-
 
     @FXML
     private Button purchase_btn;
@@ -201,6 +222,9 @@ public class DashboardController implements Initializable {
     private Label sales_total_amount;
 
     @FXML
+    private TableView<Product> product_table;
+
+    @FXML
     private Button purchase_btn_add;
 
     @FXML
@@ -285,8 +309,8 @@ public class DashboardController implements Initializable {
     }
 
     public void activateAnchorPane() {
-        Button[] btnList = {dashboard_btn, billing_btn, customer_btn, sales_btn, purchase_btn};
-        AnchorPane[] panes = {dasboard_pane, billing_pane, customer_pane, sales_pane, purchase_pane};
+        Button[] btnList = {dashboard_btn, billing_btn, customer_btn, sales_btn, purchase_btn, stock_btn};
+        AnchorPane[] panes = {dasboard_pane, billing_pane, customer_pane, sales_pane, purchase_pane, stock_pane};
 
         for (int i = 0; i < btnList.length; i++) {
             final int index = i;
@@ -317,6 +341,7 @@ public class DashboardController implements Initializable {
         customer_pane.setVisible(false);
         sales_pane.setVisible(false);
         purchase_pane.setVisible(false);
+        stock_pane.setVisible(false);
     }
 
     public void setInvoiceNum(){
@@ -509,7 +534,7 @@ public class DashboardController implements Initializable {
         boolean success = customerService.saveCustomerDetails(name, phoneNumber);
 
         if (success) {
-            showCustomerData(); // Show the updated customer data if saved
+            showCustomerData();
             return true;
         }
         return false;
@@ -744,6 +769,18 @@ public class DashboardController implements Initializable {
         purchase_date.setValue(date);
     }
 
+    public void showProductData(){
+        ObservableList<Product> productList = productService.listProductData();
+
+        product_col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        product_col_item_num.setCellValueFactory(new PropertyValueFactory<>("itemNumber"));
+        product_col_shop_details.setCellValueFactory(new PropertyValueFactory<>("ItemGroup"));
+        product_col_price.setCellValueFactory(new PropertyValueFactory<>("price"));
+        product_col_quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+
+        product_table.setItems(productList);
+    }
+
     public void getTotalStocks(){
         int totalPurchase=Integer.parseInt(dash_total_purchase.getText());
         int total_sold= Integer.parseInt(dash_total_sold.getText());
@@ -772,6 +809,7 @@ public class DashboardController implements Initializable {
             if (success) {
                 purchase_total_amount.setText(String.valueOf(quantity * price));
                 showPurchaseData();
+                showProductData();
                 purchaseClearData();
             } else {
                 showAlert(Alert.AlertType.INFORMATION, "Message", "Failed to add purchase record.");
@@ -818,6 +856,50 @@ public class DashboardController implements Initializable {
         purchase_date.setValue(date);
     }
 
+    @FXML
+    private void handleEditProduct() {
+        AtomicReference<Double> xOffset = new AtomicReference<>((double) 0);
+        AtomicReference<Double> yOffset = new AtomicReference<>((double) 0);
+        Product selectedProduct = product_table.getSelectionModel().getSelectedItem();
+        if (selectedProduct != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/inventorymanagementsystem/ProductEditDialog.fxml"));
+                Parent page = loader.load();
+
+                Stage dialogStage = new Stage();
+                dialogStage.setTitle("Ürün Düzenle");
+                dialogStage.initStyle(StageStyle.UNDECORATED);
+                Scene scene = new Scene(page);
+                dialogStage.setScene(scene);
+
+                page.setOnMousePressed(event -> {
+                    xOffset.set(event.getSceneX());
+                    yOffset.set(event.getSceneY());
+                });
+
+                page.setOnMouseDragged(event -> {
+                    dialogStage.setX(event.getScreenX() - xOffset.get());
+                    dialogStage.setY(event.getScreenY() - yOffset.get());
+                });
+                ProductEditController controller = loader.getController();
+                controller.setDialogStage(dialogStage);
+                controller.setProduct(selectedProduct);
+
+                dialogStage.showAndWait();
+
+                if (controller.isSaveClicked()) {
+                    productService.updateProduct(selectedProduct);
+                    showProductData();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            showAlert(Alert.AlertType.WARNING, "Uyarı", "Lütfen düzenlenecek ürünü seçiniz.");
+        }
+    }
+
     public void showDashboardData(){
         dash_total_purchase.setText(purchaseService.getTotalPurchasedItemCount());
         dash_total_sold.setText(salesService.getTotalSoldQuantity());
@@ -827,6 +909,7 @@ public class DashboardController implements Initializable {
         dash_total_sales_items_this_month_name.setText(monthInTurkish);
         getTotalStocks();
     }
+
     public void signOut(){
         signout_btn.getScene().getWindow().hide();
         try{
@@ -876,5 +959,8 @@ public class DashboardController implements Initializable {
 
 //      Purchase Pane
         showPurchaseData();
+
+//      Stock Pane
+        showProductData();
     }
 }

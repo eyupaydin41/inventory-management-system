@@ -1,0 +1,28 @@
+.close, .print {
+    -fx-background-radius: 5px;
+    -fx-background-color: linear-gradient(to bottom right, #21965a 0%, #00b2c2 100%);
+    -fx-cursor: hand;
+    -fx-text-fill: #fff;
+}
+
+.textfield {
+    -fx-background-color: linear-gradient(to bottom, #efefef, #eee);
+    -fx-border-color: linear-gradient(to bottom right, #2f466b, #662d60);
+    -fx-border-width: 0.8px;
+    -fx-font-family: "Tahoma";
+    -fx-border-radius: 4px;
+}
+
+.textfield:focused {
+    -fx-border-width: 1.8px;
+    -fx-background-color: #fff;
+}
+
+.productanchorpane {
+    -fx-border-width: 2px;
+    -fx-border-color: #000;
+}
+
+FontIcon {
+    -fx-fill: white;
+}

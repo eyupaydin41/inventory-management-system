@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<AnchorPane fx:id="product_edit_anchor_pane" prefHeight="500.0" prefWidth="600.0"
+            styleClass="productanchorpane" stylesheets="@producteditdialog.css"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.inventorymanagementsystem.controller.ProductEditController">
+
+    <children>
+        <Button fx:id="btn_close" layoutX="528.0" layoutY="14.0" mnemonicParsing="false" onAction="#onExit"
+                prefHeight="30.0" prefWidth="58.0" styleClass="close">
+            <graphic>
+                <FontIcon iconLiteral="fas-times" />
+            </graphic>
+        </Button>
+
+        <Label layoutX="60.0" layoutY="50.0" text="Ürün Bilgilerini Güncelle" prefWidth="480" alignment="CENTER">
+            <font>
+                <Font name="Dubai Bold" size="22.0" />
+            </font>
+        </Label>
+
+        <!-- Form Alanları -->
+        <Label layoutX="60.0" layoutY="110.0" text="Ürün Numarası:"/>
+        <TextField fx:id="itemNumberField" layoutX="200.0" layoutY="110.0" prefWidth="300.0" styleClass="textfield"/>
+
+        <Label layoutX="60.0" layoutY="160.0" text="Ürün Adı:"/>
+        <TextField fx:id="itemGroupField" layoutX="200.0" layoutY="160.0" prefWidth="300.0" styleClass="textfield"/>
+
+        <Label layoutX="60.0" layoutY="210.0" text="Miktar:"/>
+        <TextField fx:id="quantityField" layoutX="200.0" layoutY="210.0" prefWidth="300.0" styleClass="textfield"/>
+
+        <Label layoutX="60.0" layoutY="260.0" text="Fiyat:"/>
+        <TextField fx:id="priceField" layoutX="200.0" layoutY="260.0" prefWidth="300.0" styleClass="textfield"/>
+
+        <Label layoutX="60.0" layoutY="310.0" text="İndirim (%):"/>
+        <TextField fx:id="discountField" layoutX="200.0" layoutY="310.0" prefWidth="300.0" styleClass="textfield"/>
+
+        <!-- Kaydet Butonu -->
+        <Button fx:id="btn_save_product" layoutX="60.0" layoutY="370.0" prefWidth="440.0" prefHeight="46.0"
+                text="Kaydet" onAction="#handleSave" styleClass="print">
+            <graphic>
+                <FontIcon iconLiteral="fas-save" />
+            </graphic>
+            <font>
+                <Font name="Dubai Bold" size="18.0" />
+            </font>
+        </Button>
+    </children>
+</AnchorPane>

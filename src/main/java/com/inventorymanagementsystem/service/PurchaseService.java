@@ -82,21 +82,56 @@ public class PurchaseService {
     }
 
     public boolean addPurchase(String invoice, String shopAndAddress, int totalItems, double pricePerItem, LocalDate purchaseDate) throws SQLException {
-        String sql = "INSERT INTO PURCHASE(invoice, shop_and_address, total_items, total_amount, date_of_purchase) VALUES (?, ?, ?, ?, ?)";
+
+        String purchaseSql = "INSERT INTO PURCHASE(invoice, shop_and_address, total_items, total_amount, date_of_purchase) VALUES (?, ?, ?, ?, ?)";
+        String selectProductSql = "SELECT quantity FROM PRODUCTS WHERE item_number = ?";
+        String updateProductSql = "UPDATE PRODUCTS SET quantity = quantity + ? WHERE item_number = ?";
+        String insertProductSql = "INSERT INTO PRODUCTS(item_number, item_group, quantity, price) VALUES (?, ?, ?, ?)";
 
         double totalAmount = totalItems * pricePerItem;
 
-        try (Connection connection = Database.getInstance().connectDB();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = Database.getInstance().connectDB()) {
+            connection.setAutoCommit(false); // İşlem bütünlüğü için
 
-            preparedStatement.setString(1, invoice);
-            preparedStatement.setString(2, shopAndAddress);
-            preparedStatement.setInt(3, totalItems);
-            preparedStatement.setDouble(4, totalAmount);
-            preparedStatement.setDate(5, java.sql.Date.valueOf(purchaseDate));
+            // PURCHASE tablosuna ekle
+            try (PreparedStatement purchaseStmt = connection.prepareStatement(purchaseSql)) {
+                purchaseStmt.setString(1, invoice);
+                purchaseStmt.setString(2, shopAndAddress);
+                purchaseStmt.setInt(3, totalItems);
+                purchaseStmt.setDouble(4, totalAmount);
+                purchaseStmt.setDate(5, java.sql.Date.valueOf(purchaseDate));
+                purchaseStmt.executeUpdate();
+            }
 
-            int affectedRows = preparedStatement.executeUpdate();
-            return affectedRows > 0;
+            // Ürün var mı kontrol et
+            try (PreparedStatement selectStmt = connection.prepareStatement(selectProductSql)) {
+                selectStmt.setString(1, invoice);
+                ResultSet rs = selectStmt.executeQuery();
+
+                if (rs.next()) {
+                    // Ürün varsa miktarı artır
+                    try (PreparedStatement updateStmt = connection.prepareStatement(updateProductSql)) {
+                        updateStmt.setInt(1, totalItems);
+                        updateStmt.setString(2, invoice);
+                        updateStmt.executeUpdate();
+                    }
+                } else {
+                    try (PreparedStatement insertStmt = connection.prepareStatement(insertProductSql)) {
+                        insertStmt.setString(1, invoice);
+                        insertStmt.setString(2, shopAndAddress);
+                        insertStmt.setInt(3, totalItems);
+                        insertStmt.setDouble(4, 0.0);
+                        insertStmt.executeUpdate();
+                    }
+                }
+            }
+
+            connection.commit(); // Tüm işlemleri onayla
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
