@@ -16,11 +16,12 @@ public class CustomerService {
              ResultSet resultSet = statement.executeQuery("SELECT * FROM Customers")) {
 
             while (resultSet.next()) {
-                Customer customer = new Customer(
-                        resultSet.getInt("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("phone_number")
-                );
+                Customer customer = new Customer.Builder()
+                        .id(resultSet.getInt("id"))
+                        .name(resultSet.getString("name"))
+                        .phoneNumber(resultSet.getString("phone_number"))
+                        .build();
+
                 customersList.add(customer);
             }
 
@@ -38,18 +39,16 @@ public class CustomerService {
         }
 
         try (Connection connection = Database.getInstance().connectDB()) {
-            // Check if customer already exists
             String checkSql = "SELECT * FROM CUSTOMERS WHERE phone_number=?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(checkSql)) {
                 preparedStatement.setString(1, phoneNumber);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
                     showAlert(Alert.AlertType.INFORMATION, "Message", "Customer Data is already present in customer table. Proceeding further to save invoice.");
-                    return true; // Customer exists, proceed to invoice
+                    return true;
                 }
             }
 
-            // Insert new customer if not found
             String insertSql = "INSERT INTO CUSTOMERS(name, phone_number) VALUES(?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertSql)) {
                 preparedStatement.setString(1, name);
@@ -106,7 +105,6 @@ public class CustomerService {
         String sql2 = "UPDATE CUSTOMERS SET phone_number=? WHERE name=?";
 
         try (Connection connection = Database.getInstance().connectDB()) {
-            // İlk olarak phone_number'a göre güncelleme yapmayı deneyelim
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, phone);
@@ -116,7 +114,6 @@ public class CustomerService {
                 }
             }
 
-            // Eğer phone_number ile güncelleme başarılı olmazsa, name'e göre güncelleme yapalım
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql2)) {
                 preparedStatement.setString(1, phone);
                 preparedStatement.setString(2, name);

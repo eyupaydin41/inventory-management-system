@@ -24,11 +24,9 @@ public class PurchaseService {
                     totalAmount = result;
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return totalAmount;
     }
 
@@ -46,11 +44,9 @@ public class PurchaseService {
                     total = "0";
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return total;
     }
 
@@ -63,21 +59,19 @@ public class PurchaseService {
              ResultSet resultSet = statement.executeQuery(sql)) {
 
             while (resultSet.next()) {
-                Purchase purchase = new Purchase(
-                        resultSet.getInt("id"),
-                        resultSet.getString("invoice"),
-                        resultSet.getString("shop_and_address"),
-                        resultSet.getInt("total_items"),
-                        resultSet.getDouble("total_amount"),
-                        resultSet.getString("date_of_purchase")
-                );
+                Purchase purchase = new Purchase.Builder()
+                        .id(resultSet.getInt("id"))
+                        .invoice(resultSet.getString("invoice"))
+                        .shopDetails(resultSet.getString("shop_and_address"))
+                        .totalItems(resultSet.getInt("total_items"))
+                        .totalAmount(resultSet.getDouble("total_amount"))
+                        .dateOfPurchase(resultSet.getString("date_of_purchase"))
+                        .build();
                 purchaseList.add(purchase);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return purchaseList;
     }
 
@@ -91,9 +85,8 @@ public class PurchaseService {
         double totalAmount = totalItems * pricePerItem;
 
         try (Connection connection = Database.getInstance().connectDB()) {
-            connection.setAutoCommit(false); // İşlem bütünlüğü için
+            connection.setAutoCommit(false);
 
-            // PURCHASE tablosuna ekle
             try (PreparedStatement purchaseStmt = connection.prepareStatement(purchaseSql)) {
                 purchaseStmt.setString(1, invoice);
                 purchaseStmt.setString(2, shopAndAddress);
@@ -103,13 +96,11 @@ public class PurchaseService {
                 purchaseStmt.executeUpdate();
             }
 
-            // Ürün var mı kontrol et
             try (PreparedStatement selectStmt = connection.prepareStatement(selectProductSql)) {
                 selectStmt.setString(1, invoice);
                 ResultSet rs = selectStmt.executeQuery();
 
                 if (rs.next()) {
-                    // Ürün varsa miktarı artır
                     try (PreparedStatement updateStmt = connection.prepareStatement(updateProductSql)) {
                         updateStmt.setInt(1, totalItems);
                         updateStmt.setString(2, invoice);
@@ -125,8 +116,7 @@ public class PurchaseService {
                     }
                 }
             }
-
-            connection.commit(); // Tüm işlemleri onayla
+            connection.commit();
             return true;
 
         } catch (Exception e) {
@@ -139,7 +129,6 @@ public class PurchaseService {
         String sql = "DELETE FROM PURCHASE WHERE id=?";
         try (Connection connection = Database.getInstance().connectDB();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
             preparedStatement.setInt(1, purchaseId);
             int affectedRows = preparedStatement.executeUpdate();
             return affectedRows > 0;

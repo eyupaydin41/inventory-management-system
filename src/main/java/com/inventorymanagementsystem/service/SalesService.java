@@ -75,17 +75,17 @@ public class SalesService {
                  ResultSet resultSet = statement.executeQuery(sql)) {
 
                 while (resultSet.next()) {
-                    Sales sale = new Sales(
-                            Integer.parseInt(resultSet.getString("id")),
-                            resultSet.getString("inv_num"),
-                            Integer.parseInt(resultSet.getString("cust_id")),
-                            resultSet.getString("name"),
-                            Double.parseDouble(resultSet.getString("price")),
-                            Integer.parseInt(resultSet.getString("quantity")),
-                            Double.parseDouble(resultSet.getString("total_amount")),
-                            resultSet.getString("date"),
-                            resultSet.getString("item_number")
-                    );
+                    Sales sale = new Sales.Builder()
+                            .id(resultSet.getInt("id"))
+                            .inv_num(resultSet.getString("inv_num"))
+                            .cust_id(resultSet.getInt("cust_id"))
+                            .custName(resultSet.getString("name"))
+                            .price(resultSet.getDouble("price"))
+                            .quantity(resultSet.getInt("quantity"))
+                            .total_amount(resultSet.getDouble("total_amount"))
+                            .date(resultSet.getString("date"))
+                            .item_num(resultSet.getString("item_number"))
+                            .build();
                     salesList.add(sale);
                 }
             }
@@ -99,19 +99,16 @@ public class SalesService {
 
     public String generateNextInvoiceNumber() {
         String nextInvoice = "INV-1";
-        String sql = "SELECT MAX(inv_num) AS inv_num FROM sales";
+        String sql = "SELECT MAX(CAST(SUBSTRING(inv_num FROM 5) AS INTEGER)) AS max_num FROM sales";
 
         try (Connection connection = Database.getInstance().connectDB();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
 
             if (resultSet.next()) {
-                String result = resultSet.getString("inv_num");
-                if (result != null) {
-                    int invId = Integer.parseInt(result.substring(4));
-                    invId++;
-                    nextInvoice = "INV-" + invId;
-                }
+                int maxNum = resultSet.getInt("max_num");
+                int nextNum = maxNum + 1;
+                nextInvoice = "INV-" + nextNum;
             }
 
         } catch (Exception e) {
@@ -155,12 +152,10 @@ public class SalesService {
             if (resultSet.next()) {
                 String custId = resultSet.getString("id");
 
-                // Get billing details
                 String getBillingDetails = "SELECT * FROM BILLING";
                 preparedStatement = connection.prepareStatement(getBillingDetails);
                 resultSet = preparedStatement.executeQuery();
 
-                // Save invoice details in SALES table
                 while (resultSet.next()) {
                     String salesDetailsSQL = "INSERT INTO sales(inv_num, item_number, cust_id, price, quantity, total_amount, date) VALUES(?,?,?,?,?,?,?)";
                     preparedStatement = connection.prepareStatement(salesDetailsSQL);

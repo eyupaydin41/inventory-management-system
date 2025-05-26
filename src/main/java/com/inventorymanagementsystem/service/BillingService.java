@@ -20,12 +20,13 @@ public class BillingService {
              ResultSet resultSet = statement.executeQuery(sql)) {
 
             while (resultSet.next()) {
-                Billing billingData = new Billing(
-                        resultSet.getString("item_number"),
-                        resultSet.getInt("quantity"),
-                        resultSet.getDouble("price"),
-                        resultSet.getDouble("total_amount")
-                );
+                Billing billingData = new Billing.Builder()
+                        .itemNumber(resultSet.getString("item_number"))
+                        .quantity(resultSet.getInt("quantity"))
+                        .price(resultSet.getDouble("price"))
+                        .totalAmount(resultSet.getDouble("total_amount"))
+                        .build();
+
                 billingList.add(billingData);
             }
         } catch (Exception err) {
