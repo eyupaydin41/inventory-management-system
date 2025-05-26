@@ -2,6 +2,7 @@ package com.inventorymanagementsystem.controller;
 
 import com.inventorymanagementsystem.entity.Billing;
 import com.inventorymanagementsystem.entity.Product;
+import com.inventorymanagementsystem.memento.BillingFormMemento;
 import com.inventorymanagementsystem.service.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,10 +21,7 @@ import javafx.stage.StageStyle;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -91,6 +89,9 @@ public class BillingController implements Initializable {
     @FXML
     private TableColumn<?, ?> col_bill_total_amt;
 
+    @FXML
+    private Button bill_undo;
+
     private final ProductService productService = new ProductService();
     private final BillingService billingService = new BillingService();
     private final SalesService salesService = new SalesService();
@@ -99,6 +100,34 @@ public class BillingController implements Initializable {
     private SalesController salesController;
     private CustomerController customerController;
     private StockController stockController;
+
+    private Deque<BillingFormMemento> history = new LinkedList<>();
+
+    private void saveState() {
+        history.push(new BillingFormMemento(
+                bill_item.getText(),
+                bill_quantity.getValue() == null ? "" : bill_quantity.getValue(),
+                bill_price.getText(),
+                bill_total_amount.getText(),
+                bill_name.getText(),
+                bill_phone.getText(),
+                bill_date.getValue()
+        ));
+    }
+
+    @FXML
+    private void undoClear() {
+        if (history.isEmpty()) return;
+        BillingFormMemento m = history.pop();
+        bill_item.setText(m.getItem());
+        bill_quantity.setValue(m.getQuantity());
+        bill_price.setText(m.getPrice());
+        bill_total_amount.setText(m.getTotalAmount());
+        bill_name.setText(m.getCustomerName());
+        bill_phone.setText(m.getCustomerPhone());
+        bill_date.setValue(m.getDate());
+    }
+
 
     public void setInvoiceNum(String nextInvoice){
         inv_num.setText(nextInvoice);
@@ -238,11 +267,16 @@ public class BillingController implements Initializable {
     }
 
     public void billClearData(){
+        saveState();
         bill_item.clear();
         bill_quantity.setValue(null);
-        bill_price.setText("");
-        bill_total_amount.setText("");
+        bill_price.clear();
+        bill_total_amount.clear();
+        bill_name.clear();
+        bill_phone.clear();
+        bill_date.setValue(LocalDate.now());
     }
+
 
     public void printBill() {
         String latestInvoiceNumber = salesService.getLatestInvoiceNumber(); // En son fatura numarasını çek
@@ -414,5 +448,6 @@ public class BillingController implements Initializable {
         setAutoCompleteItemNumber();
         comboBoxQuantity();
         showBillingData();
+        bill_undo.setOnAction(e -> undoClear());
     }
 }

@@ -2,7 +2,7 @@
 -fx-background-color:linear-gradient(to bottom right , #21965a 0%, #00b2c2 100%);
 }
 
-.close,.add,.save,.clear,.delete,.refresh,.print{
+.close,.add,.save,.clear,.delete,.refresh,.print,.undo{
  -fx-background-color:linear-gradient(to bottom right , #21965a 0%, #00b2c2 100%);
 -fx-background-radius:3px;
 -fx-cursor:hand;

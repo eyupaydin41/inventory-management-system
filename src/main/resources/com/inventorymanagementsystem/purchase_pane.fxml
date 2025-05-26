@@ -78,7 +78,7 @@
         <TextField fx:id="purchase_totalamount" disable="true" editable="false" layoutX="591.0" layoutY="498.0" styleClass="textfield" stylesheets="@dashboard.css" />
         <DatePicker fx:id="purchase_date" layoutX="199.0" layoutY="496.0" styleClass="textfield" stylesheets="@dashboard.css" />
         <ComboBox fx:id="purchase_quantity" layoutX="591.0" layoutY="411.0" prefWidth="150.0" styleClass="textfield" stylesheets="@dashboard.css" />
-        <Button fx:id="purchase_btn_add" layoutX="720.0" layoutY="586.0" mnemonicParsing="false" onAction="#addPurchaseData" styleClass="add" stylesheets="@dashboard.css" text="Ekle">
+        <Button fx:id="purchase_btn_add" layoutX="720.0" layoutY="586.0" prefWidth="91.0" prefHeight="38.0" mnemonicParsing="false" onAction="#addPurchaseData" styleClass="add" stylesheets="@dashboard.css" text="Ekle">
             <graphic>
                 <FontIcon iconLiteral="fas-plus" />
             </graphic>
@@ -86,7 +86,28 @@
                 <Font name="Dubai Bold" size="16.0" />
             </font>
         </Button>
-        <Button fx:id="purchase_btn_clear" layoutX="606.0" layoutY="586.0" mnemonicParsing="false" onAction="#purchaseClearData" styleClass="clear" stylesheets="@dashboard.css" text="Temizle">
+        <Button fx:id="purchase_undo"
+                layoutX="444.0" layoutY="586.0"
+                prefWidth="115.0" prefHeight="38.0"
+                text="Geri Al"
+                styleClass="undo"
+                onAction="#undoClear"
+                stylesheets="@dashboard.css">
+            <graphic>
+                <FontIcon iconLiteral="fas-undo" />
+            </graphic>
+            <font>
+                <Font name="Dubai Bold" size="16.0" />
+            </font>
+        </Button>
+        <Button fx:id="purchase_btn_clear"
+                layoutX="582.0" layoutY="586.0"
+                prefWidth="115.0" prefHeight="38.0"
+                mnemonicParsing="false"
+                onAction="#purchaseClearData"
+                styleClass="clear"
+                stylesheets="@dashboard.css"
+                text="Temizle">
             <graphic>
                 <FontIcon iconLiteral="fas-eraser" />
             </graphic>

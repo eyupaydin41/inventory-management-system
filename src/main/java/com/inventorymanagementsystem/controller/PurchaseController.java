@@ -2,6 +2,7 @@ package com.inventorymanagementsystem.controller;
 
 import com.inventorymanagementsystem.config.Database;
 import com.inventorymanagementsystem.entity.Purchase;
+import com.inventorymanagementsystem.memento.PurchaseFormMemento;
 import com.inventorymanagementsystem.service.PurchaseService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +22,8 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -75,9 +78,37 @@ public class PurchaseController implements Initializable {
     @FXML
     private ComboBox<String> purchase_quantity;
 
+    @FXML
+    private Button purchase_undo;
+
     private final PurchaseService purchaseService = new PurchaseService();
     private StockController stockController;
     private BillingController billingController;
+
+    private Deque<PurchaseFormMemento> history = new LinkedList<>();
+
+    private void saveState() {
+        history.push(new PurchaseFormMemento(
+                purchase_name.getText(),
+                purchase_details.getText(),
+                purchase_quantity.getValue() == null ? "" : purchase_quantity.getValue(),
+                purchase_price.getText(),
+                purchase_totalamount.getText(),
+                purchase_date.getValue()
+        ));
+    }
+
+    @FXML
+    private void undoClear() {
+        if (history.isEmpty()) return;
+        PurchaseFormMemento m = history.pop();
+        purchase_name.setText(m.getInvoice());
+        purchase_details.setText(m.getShopDetails());
+        purchase_quantity.setValue(m.getQuantity());
+        purchase_price.setText(m.getPrice());
+        purchase_totalamount.setText(m.getTotalAmount());
+        purchase_date.setValue(m.getDate());
+    }
 
     public void comboBoxQuantity() {
         ObservableList<String> comboList = FXCollections.observableArrayList(
@@ -181,6 +212,7 @@ public class PurchaseController implements Initializable {
     }
 
     public void purchaseClearData(){
+        saveState();
         purchase_name.clear();
         purchase_details.clear();
         purchase_quantity.setValue(null);
@@ -221,6 +253,7 @@ public class PurchaseController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showPurchaseData();
         comboBoxQuantity();
+        purchase_undo.setOnAction(e -> undoClear());
     }
 
     public void setBillingController(BillingController billingController) {
