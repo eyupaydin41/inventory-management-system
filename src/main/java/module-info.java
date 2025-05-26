@@ -4,7 +4,6 @@ module com.inventorymanagementsystem{
     requires javafx.web;
     requires javafx.graphics;
     requires javafx.media;
-    requires java.base;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
@@ -14,6 +13,7 @@ module com.inventorymanagementsystem{
     requires java.sql;
     requires jasperreports;
     requires org.burningwave.core;
+    requires java.desktop;
 
 
     opens com.inventorymanagementsystem to javafx.fxml;
