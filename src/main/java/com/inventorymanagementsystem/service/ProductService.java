@@ -169,8 +169,21 @@ public class ProductService {
         return quantity;
     }
 
+    public int getTotalStockQuantity() {
+        int totalStock = 0;
+        String sql = "SELECT SUM(quantity) AS total_stock FROM products";
 
+        try (Connection connection = Database.getInstance().connectDB();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
 
+            if (resultSet.next()) {
+                totalStock = resultSet.getInt("total_stock");
+            }
 
-
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return totalStock;
+    }
 }
