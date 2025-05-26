@@ -1,0 +1,134 @@
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Separator?>
+<AnchorPane fx:id="billing_pane" layoutX="-1.0" layoutY="55.0" prefHeight="639.0" prefWidth="820.0" stylesheets="@dashboard.css" visible="false" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inventorymanagementsystem.controller.BillingController">
+    <children>
+        <TableView fx:id="billing_table" layoutX="13.0" layoutY="59.0" onMouseClicked="#selectBillingTableData" prefHeight="280.0" prefWidth="794.0" stylesheets="@dashboard.css">
+            <columns>
+                <TableColumn fx:id="col_bill_item_num" prefWidth="254.4000244140625" text="Ürün No" />
+                <TableColumn fx:id="col_bill_quantity" prefWidth="189.5999755859375" text="Miktar" />
+                <TableColumn fx:id="col_bill_price" prefWidth="150.4000244140625" text="Birim Fiyat" />
+                <TableColumn fx:id="col_bill_total_amt" minWidth="0.0" prefWidth="197.60001220703123" text="Toplam Tutar" />
+            </columns>
+        </TableView>
+        <Separator layoutX="13.0" layoutY="346.0" prefHeight="10.0" prefWidth="794.0" />
+        <TextField fx:id="bill_name" layoutX="152.0" layoutY="394.0" promptText="Müşteri İsmini Girin" styleClass="textfield" stylesheets="@dashboard.css" />
+        <TextField fx:id="bill_phone" layoutX="151.0" layoutY="441.0" promptText="Telefon No. Girin" styleClass="textfield" stylesheets="@dashboard.css" />
+        <TextField fx:id="bill_price" layoutX="556.0" layoutY="441.0" onKeyReleased="#onInputTextChanged" promptText="Ürünün Fiyatını Girin" styleClass="textfield" stylesheets="@dashboard.css" />
+        <Label layoutX="28.0" layoutY="389.0" prefHeight="32.0" prefWidth="83.0" text="İsim:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Label layoutX="28.0" layoutY="437.0" prefHeight="32.0" prefWidth="101.0" text="Telefon No:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Label layoutX="28.0" layoutY="488.0" prefHeight="32.0" prefWidth="102.0" text="Ürün No:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Label layoutX="429.0" layoutY="388.0" prefHeight="32.0" prefWidth="83.0" text="Miktar:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Label layoutX="429.0" layoutY="437.0" prefHeight="32.0" prefWidth="83.0" text="Birim Fiyat:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <TextField fx:id="bill_total_amount" editable="false" layoutX="556.0" layoutY="493.0" promptText="Toplam Tutarı Girin" styleClass="textfield" stylesheets="@dashboard.css">
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets></TextField>
+        <Label layoutX="428.0" layoutY="488.0" prefHeight="32.0" prefWidth="102.0" text="Toplam Tutar:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Button fx:id="bill_save" alignment="CENTER" layoutX="602.0" layoutY="583.0" mnemonicParsing="false" onMouseClicked="#billSave" prefHeight="38.0" prefWidth="91.0" styleClass="save" stylesheets="@dashboard.css" text="Kaydet">
+            <graphic>
+                <FontIcon iconLiteral="fas-save" />
+            </graphic>
+            <font>
+                <Font name="Dubai Bold" size="16.0" />
+            </font></Button>
+        <Button fx:id="bill_clear" layoutX="476.0" layoutY="583.0" mnemonicParsing="false" onAction="#billClearData" onMouseClicked="#billClearData" prefHeight="38.0" prefWidth="115.0" styleClass="clear" stylesheets="@dashboard.css" text="Temizle">
+            <graphic>
+                <FontIcon iconLiteral="fas-eraser" />
+            </graphic>
+            <font>
+                <Font name="Dubai Bold" size="16.0" />
+            </font></Button>
+        <Button fx:id="bill_print" layoutX="743.0" layoutY="13.0" mnemonicParsing="false" onAction="#printBill" prefHeight="38.0" prefWidth="50.0" styleClass="print" stylesheets="@dashboard.css">
+            <graphic>
+                <FontIcon iconLiteral="fas-print" />
+            </graphic></Button>
+        <DatePicker fx:id="bill_date" layoutX="151.0" layoutY="536.0" prefHeight="32.0" prefWidth="175.0" promptText="Tarihi Girin" styleClass="textfield" stylesheets="@dashboard.css" />
+        <Label layoutX="28.0" layoutY="534.0" prefHeight="32.0" prefWidth="102.0" text="Tarih:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Button fx:id="bill_add" alignment="CENTER" layoutX="707.0" layoutY="583.0" mnemonicParsing="false" onAction="#addBillingData" prefHeight="38.0" prefWidth="91.0" styleClass="add" stylesheets="@dashboard.css" text="Ekle">
+            <graphic>
+                <FontIcon iconLiteral="fas-plus" />
+            </graphic>
+            <font>
+                <Font name="Dubai Bold" size="16.0" />
+            </font></Button>
+        <Label layoutX="27.0" layoutY="352.0" prefHeight="32.0" prefWidth="115.0" text="Fatura No:">
+            <font>
+                <Font name="System Bold" size="16.0" />
+            </font>
+        </Label>
+        <Label fx:id="inv_num" layoutX="151.0" layoutY="352.0" prefHeight="32.0" prefWidth="102.0" />
+        <Label layoutX="428.0" layoutY="534.0" prefHeight="32.0" prefWidth="102.0" text="Son Tutar:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Label layoutX="558.0" layoutY="536.0" prefHeight="32.0" prefWidth="15.0" text="₺">
+            <font>
+                <Font name="Dubai Bold" size="18.0" />
+            </font>
+        </Label>
+        <Label fx:id="final_amount" layoutX="574.0" layoutY="535.0" prefHeight="32.0" prefWidth="156.0" text="0.00">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Label>
+        <ComboBox fx:id="bill_quantity" layoutX="554.0" layoutY="390.0" onAction="#onInputTextChanged" prefHeight="28.0" prefWidth="150.0" promptText="Miktar Gir" styleClass="textfield" stylesheets="@dashboard.css" />
+        <Button fx:id="bill_update" alignment="CENTER" layoutX="682.0" layoutY="13.0" mnemonicParsing="false" onMouseClicked="#updateSelectedBillingData" prefHeight="38.0" prefWidth="50.0" styleClass="add" stylesheets="@dashboard.css">
+            <graphic>
+                <FontIcon iconLiteral="fas-edit" />
+            </graphic>
+        </Button>
+        <Button fx:id="bill_delete" alignment="CENTER" layoutX="622.0" layoutY="13.0" mnemonicParsing="false" onMouseClicked="#deleteBillingData" prefHeight="38.0" prefWidth="50.0" styleClass="add" stylesheets="@dashboard.css">
+            <graphic>
+                <FontIcon iconLiteral="fas-trash" />
+            </graphic>
+        </Button>
+        <TextField fx:id="bill_item" layoutX="151.0" layoutY="493.0" onKeyPressed="#onInputTextChanged" promptText="Ürün No. Girin" styleClass="textfield" stylesheets="@dashboard.css" />
+        <Button fx:id="bill_clear1" layoutX="27.0" layoutY="13.0" mnemonicParsing="false" onAction="#searchForBills" onMouseClicked="#billClearData" prefHeight="38.0" prefWidth="156.0" styleClass="clear" stylesheets="@dashboard.css" text="Faturalara Gözat">
+            <graphic>
+                <FontIcon iconLiteral="fas-search" />
+            </graphic>
+            <font>
+                <Font name="Dubai Bold" size="15.0" />
+            </font>
+        </Button>
+    </children></AnchorPane>

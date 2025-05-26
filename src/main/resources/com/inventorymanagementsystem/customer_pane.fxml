@@ -1,0 +1,49 @@
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="customer_pane" layoutX="-1.0" layoutY="55.0" prefHeight="639.0" prefWidth="820.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inventorymanagementsystem.controller.CustomerController">
+    <children>
+        <TableView fx:id="customer_table" layoutX="13.0" layoutY="134.0" onMouseClicked="#selectCustomerTableData" prefHeight="487.0" prefWidth="794.0" stylesheets="@dashboard.css">
+            <columns>
+                <TableColumn fx:id="cust_col_id" prefWidth="196.79998779296875" text="ID" />
+                <TableColumn fx:id="cust_col_name" prefWidth="307.20001220703125" text="İsim" />
+                <TableColumn fx:id="cust_col_phone" prefWidth="288.00006103515625" text="Telefon Numarası" />
+            </columns>
+        </TableView>
+        <Button fx:id="cust_btn_add" layoutX="736.0" layoutY="32.0" mnemonicParsing="false" onMouseClicked="#addCustomerData" prefHeight="32.0" prefWidth="50.0" styleClass="add" stylesheets="@dashboard.css">
+            <graphic>
+                <FontIcon iconLiteral="fas-user-plus" />
+            </graphic></Button>
+        <Button fx:id="cust_btn_edit" layoutX="678.0" layoutY="32.0" mnemonicParsing="false" onMouseClicked="#updateCustomerData" prefHeight="32.0" prefWidth="50.0" styleClass="refresh" stylesheets="@dashboard.css">
+            <graphic>
+                <FontIcon iconLiteral="fas-user-edit" />
+            </graphic></Button>
+        <Button fx:id="cust_btn_delete" layoutX="620.0" layoutY="32.0" mnemonicParsing="false" onMouseClicked="#deleteCustomerData" prefHeight="32.0" prefWidth="50.0" styleClass="delete" stylesheets="@dashboard.css">
+            <graphic>
+                <FontIcon iconLiteral="fas-user-times" />
+            </graphic></Button>
+        <TextField fx:id="cust_field_name" layoutX="151.0" layoutY="87.0" prefHeight="32.0" prefWidth="206.0" styleClass="textfield" stylesheets="@dashboard.css" />
+        <TextField fx:id="cust_field_phone" layoutX="528.0" layoutY="87.0" prefHeight="32.0" prefWidth="200.0" styleClass="textfield" stylesheets="@dashboard.css" />
+        <Label layoutX="105.0" layoutY="86.0" prefHeight="32.0" prefWidth="37.0" text="İsim:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Label layoutX="391.0" layoutY="86.0" prefHeight="32.0" prefWidth="132.0" text="Telefon Numarası:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Button fx:id="cust_btn_print" layoutX="562.0" layoutY="32.0" mnemonicParsing="false" onAction="#printCustomersDetails" prefHeight="32.0" prefWidth="50.0" styleClass="add" stylesheets="@dashboard.css">
+            <graphic>
+                <FontIcon iconLiteral="fas-print" />
+            </graphic>
+        </Button>
+    </children>
+</AnchorPane>

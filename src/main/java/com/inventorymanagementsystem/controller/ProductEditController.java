@@ -7,8 +7,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.awt.event.ActionEvent;
-
 public class ProductEditController {
 
     public AnchorPane product_edit_anchor_pane;
@@ -21,7 +19,7 @@ public class ProductEditController {
     @FXML private TextField discountField;
 
     private Stage dialogStage;
-    private Product product;  // Product model sınıfın
+    private Product product;
     private boolean saveClicked = false;
 
     public void setDialogStage(Stage dialogStage) {

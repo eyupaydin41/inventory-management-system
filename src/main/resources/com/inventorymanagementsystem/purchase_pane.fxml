@@ -1,0 +1,104 @@
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.control.Separator?>
+<AnchorPane fx:id="purchase_pane" layoutX="-1.0" layoutY="55.0" prefHeight="639.0" prefWidth="820.0" visible="false" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.inventorymanagementsystem.controller.PurchaseController">
+    <children>
+        <TableView fx:id="purchase_table" editable="true" layoutX="13.0" layoutY="68.0" prefHeight="286.0" prefWidth="794.0" stylesheets="@dashboard.css">
+            <columns>
+                <TableColumn fx:id="purchase_col_id" prefWidth="69.60000610351562" text="ID" />
+                <TableColumn fx:id="purchase_col_invoice" prefWidth="161.5999755859375" text="Ürün No" />
+                <TableColumn fx:id="purchase_col_shop_details" prefWidth="163.20001220703125" text="Sipariş Detayı" />
+                <TableColumn fx:id="purchase_col_total_items" minWidth="0.0" prefWidth="136.0" text="Ürün Miktarı" />
+                <TableColumn fx:id="purchase_col_total_amount" minWidth="0.0" prefWidth="136.0" text="Toplam Fiyat" />
+                <TableColumn fx:id="purchase_col_date_of_purchase" minWidth="0.0" prefWidth="125.59995117187498" text="Sipariş Tarihi" />
+            </columns>
+        </TableView>
+        <Button fx:id="purchase_btn_delete" layoutX="744.0" layoutY="22.0" mnemonicParsing="false" onMouseClicked="#deletePurchaseData" prefHeight="32.0" prefWidth="50.0" styleClass="add" stylesheets="@dashboard.css">
+            <graphic>
+                <FontIcon iconLiteral="fas-trash-alt" />
+            </graphic>
+        </Button>
+        <Button fx:id="purchase_btn_print" layoutX="687.0" layoutY="22.0" mnemonicParsing="false" onAction="#printPurchaseDetails" prefHeight="32.0" prefWidth="50.0" styleClass="add" stylesheets="@dashboard.css">
+            <graphic>
+                <FontIcon iconLiteral="fas-print" />
+            </graphic>
+        </Button>
+        <Label layoutX="13.0" layoutY="14.0" prefHeight="47.0" prefWidth="227.0" text="Toplam Satın Alma Tutarı:">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Label>
+        <Label fx:id="purchase_total_amount" layoutX="254.0" layoutY="14.0" prefHeight="47.0" prefWidth="267.0">
+            <font>
+                <Font name="Dubai Bold" size="18.0" />
+            </font>
+        </Label>
+        <Label layoutX="81.0" layoutY="410.0" text="Ürün No:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Label layoutX="80.0" layoutY="454.0" text="Sipariş Detayı:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Label layoutX="470.0" layoutY="411.0" text="Miktar:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Label layoutX="469.0" layoutY="455.0" text="Birim Fiyat:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Label layoutX="81.0" layoutY="496.0" text="Tarih:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <Label layoutX="469.0" layoutY="498.0" text="Toplam Fiyat:">
+            <font>
+                <Font name="System Bold" size="15.0" />
+            </font>
+        </Label>
+        <TextField fx:id="purchase_name" layoutX="200.0" layoutY="410.0" styleClass="textfield" stylesheets="@dashboard.css" />
+        <TextField fx:id="purchase_details" layoutX="200.0" layoutY="454.0" styleClass="textfield" stylesheets="@dashboard.css" />
+        <TextField fx:id="purchase_price" layoutX="591.0" layoutY="455.0" onKeyReleased="#onPurchaseInputTextChanged" styleClass="textfield" stylesheets="@dashboard.css" />
+        <TextField fx:id="purchase_totalamount" disable="true" editable="false" layoutX="591.0" layoutY="498.0" styleClass="textfield" stylesheets="@dashboard.css" />
+        <DatePicker fx:id="purchase_date" layoutX="199.0" layoutY="496.0" styleClass="textfield" stylesheets="@dashboard.css" />
+        <ComboBox fx:id="purchase_quantity" layoutX="591.0" layoutY="411.0" prefWidth="150.0" styleClass="textfield" stylesheets="@dashboard.css" />
+        <Button fx:id="purchase_btn_add" layoutX="720.0" layoutY="586.0" mnemonicParsing="false" onAction="#addPurchaseData" styleClass="add" stylesheets="@dashboard.css" text="Ekle">
+            <graphic>
+                <FontIcon iconLiteral="fas-plus" />
+            </graphic>
+            <font>
+                <Font name="Dubai Bold" size="16.0" />
+            </font>
+        </Button>
+        <Button fx:id="purchase_btn_clear" layoutX="606.0" layoutY="586.0" mnemonicParsing="false" onAction="#purchaseClearData" styleClass="clear" stylesheets="@dashboard.css" text="Temizle">
+            <graphic>
+                <FontIcon iconLiteral="fas-eraser" />
+            </graphic>
+            <font>
+                <Font name="Dubai Bold" size="16.0" />
+            </font>
+        </Button>
+        <Separator layoutX="13.0" layoutY="373.0" prefHeight="2.0" prefWidth="794.0" />
+        <Separator layoutX="13.0" layoutY="565.0" prefHeight="2.0" prefWidth="794.0" />
+        <Label layoutX="240.0" layoutY="24.0" text="₺">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Label>
+    </children></AnchorPane>
