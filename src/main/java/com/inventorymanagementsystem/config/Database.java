@@ -10,10 +10,8 @@ public class Database {
     private static final String CONFIG_FILE = "application.properties";
     private static volatile Database instance;
 
-    // Private constructor to prevent instantiation
     private Database() {}
 
-    // Thread-safe Singleton getter with double-checked locking
     public static Database getInstance() {
         if (instance == null) {
             synchronized (Database.class) {
@@ -27,18 +25,21 @@ public class Database {
 
     public Connection connectDB() {
         Properties dbConfig = new Properties();
-        try {
-            InputStream input = this.getClass().getClassLoader().getResourceAsStream(CONFIG_FILE);
+        try (InputStream input = this.getClass().getClassLoader().getResourceAsStream(CONFIG_FILE)) {
+            if (input == null) {
+                throw new RuntimeException("Database configuration file not found.");
+            }
+
             dbConfig.load(input);
             Class.forName(dbConfig.getProperty("javafx.jdbc.driver"));
+
             return DriverManager.getConnection(
                     dbConfig.getProperty("javafx.datasource.url"),
                     dbConfig.getProperty("javafx.datasource.username"),
                     dbConfig.getProperty("javafx.datasource.password")
             );
-        } catch (Exception exception) {
-            exception.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException("Database connection failed", e);
         }
-        return null;
     }
 }
