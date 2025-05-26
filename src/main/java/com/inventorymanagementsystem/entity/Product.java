@@ -3,24 +3,20 @@ package com.inventorymanagementsystem.entity;
 public class Product {
     private int id;
     private String itemNumber;
-    private String ItemGroup;
+    private String itemGroup;
     private int quantity;
     private double price;
 
-    public Product(int id, String itemNumber, String itemGroup, int quantity, double price) {
-        this.id = id;
-        this.itemNumber = itemNumber;
-        ItemGroup = itemGroup;
-        this.quantity = quantity;
-        this.price = price;
+    private Product(Builder builder) {
+        this.id = builder.id;
+        this.itemNumber = builder.itemNumber;
+        this.itemGroup = builder.itemGroup;
+        this.quantity = builder.quantity;
+        this.price = builder.price;
     }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getItemNumber() {
@@ -32,11 +28,11 @@ public class Product {
     }
 
     public String getItemGroup() {
-        return ItemGroup;
+        return itemGroup;
     }
 
     public void setItemGroup(String itemGroup) {
-        ItemGroup = itemGroup;
+        this.itemGroup = itemGroup;
     }
 
     public int getQuantity() {
@@ -53,5 +49,42 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public static class Builder {
+        private int id;
+        private String itemNumber;
+        private String itemGroup;
+        private int quantity;
+        private double price;
+
+        public Builder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder itemNumber(String itemNumber) {
+            this.itemNumber = itemNumber;
+            return this;
+        }
+
+        public Builder itemGroup(String itemGroup) {
+            this.itemGroup = itemGroup;
+            return this;
+        }
+
+        public Builder quantity(int quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
+        public Builder price(double price) {
+            this.price = price;
+            return this;
+        }
+
+        public Product build() {
+            return new Product(this);
+        }
     }
 }
