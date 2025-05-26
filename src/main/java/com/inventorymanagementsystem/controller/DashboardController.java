@@ -1,5 +1,7 @@
 package com.inventorymanagementsystem.controller;
 
+import com.inventorymanagementsystem.composite.DashboardComposite;
+import com.inventorymanagementsystem.composite.DashboardLeaf;
 import com.inventorymanagementsystem.entity.*;
 import com.inventorymanagementsystem.service.*;
 import com.inventorymanagementsystem.utils.MonthUtils;
@@ -15,6 +17,7 @@ import javafx.stage.StageStyle;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Supplier;
 
 import static org.burningwave.core.assembler.StaticComponentContainer.Modules;
 
@@ -100,8 +103,11 @@ public class DashboardController implements Initializable {
     @FXML
     private StockController stock_paneController;
 
+    private DashboardComposite dashboardComposite;
+
     private final SalesService salesService = new SalesService();
     private final PurchaseService purchaseService = new PurchaseService();
+    private final ProductService productService = new ProductService();
     private final String monthInTurkish = MonthUtils.translate(LocalDate.now().getMonth());
 
     public void onExit(){
@@ -160,14 +166,28 @@ public class DashboardController implements Initializable {
     }
 
     public void showDashboardData(){
-        dash_total_purchase.setText(purchaseService.getTotalPurchasedItemCount());
-        dash_total_sold.setText(salesService.getTotalSoldQuantity());
-        dash_total_sales_this_month.setText(String.format("%.2f", salesService.getTotalSalesThisMonth()));
-        dash_total_sales_this_month_name.setText(monthInTurkish);
-        dash_total_items_sold_this_month.setText(String.valueOf(salesService.getTotalItemsSoldThisMonth()));
-        dash_total_sales_items_this_month_name.setText(monthInTurkish);
-        getTotalStocks();
+        dashboardComposite.update();
     }
+
+    private void initializeDashboardComposite() {
+        dashboardComposite = new DashboardComposite();
+
+        Supplier<String> totalPurchaseSupplier = purchaseService::getTotalPurchasedItemCount;
+        Supplier<String> totalSoldSupplier = salesService::getTotalSoldQuantity;
+        Supplier<String> totalSalesThisMonthSupplier = () -> String.format("%.2f", salesService.getTotalSalesThisMonth());
+        Supplier<String> totalItemsSoldThisMonthSupplier = () -> String.valueOf(salesService.getTotalItemsSoldThisMonth());
+        Supplier<String> monthNameSupplier = () -> monthInTurkish;
+        Supplier<String> totalStocksSupplier = () -> String.valueOf(productService.getTotalStockQuantity());
+
+        dashboardComposite.add(new DashboardLeaf(dash_total_purchase, totalPurchaseSupplier));
+        dashboardComposite.add(new DashboardLeaf(dash_total_sold, totalSoldSupplier));
+        dashboardComposite.add(new DashboardLeaf(dash_total_sales_this_month, totalSalesThisMonthSupplier));
+        dashboardComposite.add(new DashboardLeaf(dash_total_items_sold_this_month, totalItemsSoldThisMonthSupplier));
+        dashboardComposite.add(new DashboardLeaf(dash_total_sales_this_month_name, monthNameSupplier));
+        dashboardComposite.add(new DashboardLeaf(dash_total_sales_items_this_month_name, monthNameSupplier));
+        dashboardComposite.add(new DashboardLeaf(dash_total_stocks, totalStocksSupplier));
+    }
+
 
     public void signOut(){
         signout_btn.getScene().getWindow().hide();
@@ -204,7 +224,9 @@ public class DashboardController implements Initializable {
 
         setUsername();
         activateDashboard();
-        showDashboardData();
+        // showDashboardData();
+        initializeDashboardComposite();
+        dashboardComposite.update();
     }
 
 }
