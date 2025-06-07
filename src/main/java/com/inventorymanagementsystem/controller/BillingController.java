@@ -100,6 +100,7 @@ public class BillingController implements Initializable {
     private SalesController salesController;
     private CustomerController customerController;
     private StockController stockController;
+    private DashboardController dashboardController;
 
     private Deque<BillingFormMemento> history = new LinkedList<>();
 
@@ -380,6 +381,7 @@ public class BillingController implements Initializable {
             deleteBillingData();
             salesController.showSalesData();
             stockController.showProductData();
+            dashboardController.showDashboardData();
 
             setInvoiceNum(salesController.getInvoiceNum());
             showAlert(Alert.AlertType.INFORMATION, "Message", "Data is successfully saved.");
@@ -435,6 +437,10 @@ public class BillingController implements Initializable {
 
     public void setStockController(StockController stockController){
         this.stockController = stockController;
+    }
+
+    public void setDashboardController(DashboardController dashboardController){
+        this.dashboardController = dashboardController;
     }
 
     private void afterSalesControllerSet() {
