@@ -1,137 +1,268 @@
-package com.inventorymanagementsystem.service;
+package com.inventorymanagementsystem.controller;
 
 import com.inventorymanagementsystem.config.Database;
 import com.inventorymanagementsystem.entity.Purchase;
+import com.inventorymanagementsystem.memento.PurchaseFormMemento;
+import com.inventorymanagementsystem.service.PurchaseService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.sql.*;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-public class PurchaseService {
+public class PurchaseController implements Initializable {
 
-    public String getTotalPurchaseAmount() {
-        String totalAmount = "0.00";
-        String sql = "SELECT SUM(total_amount) as total_purchase_amount FROM purchase";
+    @FXML
+    private TableColumn<?, ?> purchase_col_date_of_purchase;
 
-        try (Connection connection = Database.getInstance().connectDB();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
+    @FXML
+    private TableColumn<?, ?> purchase_col_id;
 
-            if (resultSet.next()) {
-                String result = resultSet.getString("total_purchase_amount");
-                if (result != null) {
-                    totalAmount = result;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return totalAmount;
+    @FXML
+    private TableColumn<?, ?> purchase_col_invoice;
+
+    @FXML
+    private TableColumn<?, ?> purchase_col_shop_details;
+
+    @FXML
+    private TableColumn<?, ?> purchase_col_total_amount;
+
+    @FXML
+    private TableColumn<?, ?> purchase_col_total_items;
+
+    @FXML
+    private TableView<Purchase> purchase_table;
+
+    @FXML
+    private Button purchase_btn_add;
+
+    @FXML
+    private Button purchase_btn_print;
+
+    @FXML
+    private Label purchase_total_amount;
+
+    @FXML
+    private DatePicker purchase_date;
+
+    @FXML
+    private TextField purchase_name;
+
+    @FXML
+    private TextField purchase_details;
+
+    @FXML
+    private TextField purchase_price;
+
+    @FXML
+    private TextField purchase_totalamount;
+
+    @FXML
+    private ComboBox<String> purchase_quantity;
+
+    @FXML
+    private Button purchase_undo;
+
+    private final PurchaseService purchaseService = new PurchaseService();
+    private StockController stockController;
+    private BillingController billingController;
+    private DashboardController dashboardController;
+
+    private Deque<PurchaseFormMemento> history = new LinkedList<>();
+
+    private void saveState() {
+        history.push(new PurchaseFormMemento(
+                purchase_name.getText(),
+                purchase_details.getText(),
+                purchase_quantity.getValue() == null ? "" : purchase_quantity.getValue(),
+                purchase_price.getText(),
+                purchase_totalamount.getText(),
+                purchase_date.getValue()
+        ));
     }
 
-    public String getTotalPurchasedItemCount() {
-        String total = "0";
-        String sql = "SELECT SUM(total_items) as total_purchase FROM PURCHASE";
-
-        try (Connection connection = Database.getInstance().connectDB();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
-
-            if (resultSet.next()) {
-                total = resultSet.getString("total_purchase");
-                if (total == null) {
-                    total = "0";
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return total;
+    @FXML
+    private void undoClear() {
+        if (history.isEmpty()) return;
+        PurchaseFormMemento m = history.pop();
+        purchase_name.setText(m.getInvoice());
+        purchase_details.setText(m.getShopDetails());
+        purchase_quantity.setValue(m.getQuantity());
+        purchase_price.setText(m.getPrice());
+        purchase_totalamount.setText(m.getTotalAmount());
+        purchase_date.setValue(m.getDate());
     }
 
-    public ObservableList<Purchase> listPurchaseData() {
-        ObservableList<Purchase> purchaseList = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM Purchase";
-
-        try (Connection connection = Database.getInstance().connectDB();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
-
-            while (resultSet.next()) {
-                Purchase purchase = new Purchase.Builder()
-                        .id(resultSet.getInt("id"))
-                        .invoice(resultSet.getString("invoice"))
-                        .shopDetails(resultSet.getString("shop_and_address"))
-                        .totalItems(resultSet.getInt("total_items"))
-                        .totalAmount(resultSet.getDouble("total_amount"))
-                        .dateOfPurchase(resultSet.getString("date_of_purchase"))
-                        .build();
-                purchaseList.add(purchase);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return purchaseList;
+    public void comboBoxQuantity() {
+        ObservableList<String> comboList = FXCollections.observableArrayList(
+                IntStream.rangeClosed(1, 10)
+                        .mapToObj(String::valueOf)
+                        .collect(Collectors.toList())
+        );
+        purchase_quantity.setItems(comboList);
     }
 
-    public boolean addPurchase(String invoice, String shopAndAddress, int totalItems, double pricePerItem, LocalDate purchaseDate) throws SQLException {
+    public void showPurchaseData(){
+        String totalAmount = purchaseService.getTotalPurchaseAmount();
+        ObservableList<Purchase> purchaseList= purchaseService.listPurchaseData();
+        purchase_col_id.setCellValueFactory(new PropertyValueFactory<>("id"));
+        purchase_col_invoice.setCellValueFactory(new PropertyValueFactory<>("invoice"));
+        purchase_col_shop_details.setCellValueFactory(new PropertyValueFactory<>("shopDetails"));
+        purchase_col_total_items.setCellValueFactory(new PropertyValueFactory<>("totalItems"));
+        purchase_col_total_amount.setCellValueFactory(new PropertyValueFactory<>("totalAmount"));
+        purchase_col_date_of_purchase.setCellValueFactory(new PropertyValueFactory<>("dateOfPurchase"));
+        purchase_table.setItems(purchaseList);
+        purchase_total_amount.setText(totalAmount);
+        LocalDate date=LocalDate.now();
+        purchase_date.setValue(date);
+    }
 
-        String purchaseSql = "INSERT INTO PURCHASE(invoice, shop_and_address, total_items, total_amount, date_of_purchase) VALUES (?, ?, ?, ?, ?)";
-        String selectProductSql = "SELECT quantity FROM PRODUCTS WHERE item_number = ?";
-        String updateProductSql = "UPDATE PRODUCTS SET quantity = quantity + ? WHERE item_number = ?";
-        String insertProductSql = "INSERT INTO PRODUCTS(item_number, item_group, quantity, price) VALUES (?, ?, ?, ?)";
 
-        double totalAmount = totalItems * pricePerItem;
 
-        try (Connection connection = Database.getInstance().connectDB()) {
-            connection.setAutoCommit(false);
+    public void addPurchaseData() {
+        if (purchase_name.getText().isBlank()
+                || purchase_quantity.getSelectionModel().isEmpty()
+                || purchase_price.getText().isBlank()
+                || purchase_details.getText().isBlank()) {
 
-            try (PreparedStatement purchaseStmt = connection.prepareStatement(purchaseSql)) {
-                purchaseStmt.setString(1, invoice);
-                purchaseStmt.setString(2, shopAndAddress);
-                purchaseStmt.setInt(3, totalItems);
-                purchaseStmt.setDouble(4, totalAmount);
-                purchaseStmt.setDate(5, java.sql.Date.valueOf(purchaseDate));
-                purchaseStmt.executeUpdate();
+            showAlert(Alert.AlertType.INFORMATION, "Message", "Please fill the mandatory data such as item number, quantity and price.");
+            return;
+        }
+
+        try {
+            String invoice = purchase_name.getText();
+            String shopAndAddress = purchase_details.getText();
+            int quantity = Integer.parseInt(purchase_quantity.getValue().toString());
+            double price = Double.parseDouble(purchase_price.getText());
+            LocalDate date = purchase_date.getValue();
+
+            boolean success = purchaseService.addPurchase(invoice, shopAndAddress, quantity, price, date);
+            if (success) {
+                purchase_total_amount.setText(String.valueOf(quantity * price));
+                showPurchaseData();
+                stockController.showProductData();
+                dashboardController.showDashboardData();
+                purchaseClearData();
+                billingController.setAutoCompleteItemNumber();
+            } else {
+                showAlert(Alert.AlertType.INFORMATION, "Message", "Failed to add purchase record.");
             }
-
-            try (PreparedStatement selectStmt = connection.prepareStatement(selectProductSql)) {
-                selectStmt.setString(1, invoice);
-                ResultSet rs = selectStmt.executeQuery();
-
-                if (rs.next()) {
-                    try (PreparedStatement updateStmt = connection.prepareStatement(updateProductSql)) {
-                        updateStmt.setInt(1, totalItems);
-                        updateStmt.setString(2, invoice);
-                        updateStmt.executeUpdate();
-                    }
-                } else {
-                    try (PreparedStatement insertStmt = connection.prepareStatement(insertProductSql)) {
-                        insertStmt.setString(1, invoice);
-                        insertStmt.setString(2, shopAndAddress);
-                        insertStmt.setInt(3, totalItems);
-                        insertStmt.setDouble(4, 0.0);
-                        insertStmt.executeUpdate();
-                    }
-                }
-            }
-            connection.commit();
-            return true;
-
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter valid numbers for quantity and price.");
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
         }
     }
 
-    public boolean deletePurchaseById(int purchaseId) throws SQLException {
-        String sql = "DELETE FROM PURCHASE WHERE id=?";
-        try (Connection connection = Database.getInstance().connectDB();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, purchaseId);
-            int affectedRows = preparedStatement.executeUpdate();
-            return affectedRows > 0;
+    public void printPurchaseDetails(){
+        Connection connection= Database.getInstance().connectDB();
+        String sql="SELECT * FROM purchase";
+        try{
+            JasperDesign jasperDesign= JRXmlLoader.load(this.getClass().getClassLoader().getResourceAsStream("jasper-reports/purchase_report.jrxml"));
+            JRDesignQuery updateQuery=new JRDesignQuery();
+            updateQuery.setText(sql);
+            jasperDesign.setQuery(updateQuery);
+            JasperReport jasperReport= JasperCompileManager.compileReport(jasperDesign);
+            JasperPrint jasperPrint= JasperFillManager.fillReport(jasperReport,null,connection);
+            JasperViewer.viewReport(jasperPrint ,false);
+        }catch (Exception err){
+            err.printStackTrace();
         }
+    }
+
+    public void deletePurchaseData() {
+        if (purchase_table.getSelectionModel().isEmpty()) {
+            showAlert(Alert.AlertType.INFORMATION, "Message", "No purchase selected to delete.");
+            return;
+        }
+
+        int selectedId = purchase_table.getSelectionModel().getSelectedItem().getId();
+        PurchaseService purchaseService = new PurchaseService();
+
+        try {
+            boolean deleted = purchaseService.deletePurchaseById(selectedId);
+            if (deleted) {
+                showPurchaseData();
+            } else {
+                showAlert(Alert.AlertType.INFORMATION, "Message", "No data present in the billing table.");
+            }
+        } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", e.getMessage());
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
+        }
+    }
+
+    public void purchaseClearData(){
+        saveState();
+        purchase_name.clear();
+        purchase_details.clear();
+        purchase_quantity.setValue(null);
+        purchase_price.clear();
+        purchase_totalamount.clear();
+        LocalDate date=LocalDate.now();
+        purchase_date.setValue(date);
+    }
+
+    public void checkPurchaseForPriceandQuantity(){
+        if(!purchase_price.getText().isBlank()&& !purchase_quantity.getSelectionModel().isEmpty()){
+            purchase_totalamount.setText(String.valueOf(Integer.parseInt(purchase_price.getText())*Integer.parseInt(purchase_quantity.getValue().toString())));
+        }else{
+            purchase_totalamount.setText("0");
+        }
+    }
+
+    public void onPurchaseInputTextChanged(){
+        purchase_price.setOnKeyReleased(event-> checkPurchaseForPriceandQuantity());
+        purchase_price.setOnKeyPressed(event-> checkPurchaseForPriceandQuantity());
+        purchase_price.setOnKeyTyped(event-> checkPurchaseForPriceandQuantity());
+        purchase_quantity.setOnAction(actionEvent -> checkPurchaseForPriceandQuantity());
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public void setStockController(StockController stockController) {
+        this.stockController = stockController;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        showPurchaseData();
+        comboBoxQuantity();
+        purchase_undo.setOnAction(e -> undoClear());
+    }
+
+    public void setBillingController(BillingController billingController) {
+        this.billingController = billingController;
+    }
+
+    public void setDashboardController(DashboardController dashboardController) {
+        this.dashboardController = dashboardController;
     }
 }
