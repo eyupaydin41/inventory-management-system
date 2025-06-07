@@ -40,7 +40,7 @@
 			<staticText>
 				<reportElement style="Title" x="0" y="13" width="263" height="33" uuid="bcf29663-c4b8-483e-a197-e5f6920fd2a2"/>
 				<textElement verticalAlignment="Middle"/>
-				<text><![CDATA[Fashion Club]]></text>
+				<text><![CDATA[İSTUN]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="SubTitle" x="63" y="46" width="200" height="22" uuid="c089ef81-84c2-4243-a7e9-0e0a8992e71a"/>
@@ -121,7 +121,7 @@
 				<textElement>
 					<font size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total Customers :]]></text>
+				<text><![CDATA[Total Customers:]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="305" y="20" width="143" height="30" uuid="d7026397-5d85-4bd1-9cb5-94d5d7a2729d"/>

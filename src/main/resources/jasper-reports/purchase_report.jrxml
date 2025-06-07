@@ -132,7 +132,7 @@
 				<textElement verticalAlignment="Middle">
 					<font pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Fashion Club]]></text>
+				<text><![CDATA[İSTUN]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="SubTitle" x="230" y="64" width="196" height="32" uuid="ea798e7f-73ea-43db-be42-301b5e1037c9"/>

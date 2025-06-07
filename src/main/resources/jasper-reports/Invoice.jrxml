@@ -212,7 +212,7 @@
 			</textField>
 			<image hAlign="Center">
 				<reportElement x="0" y="0" width="65" height="60" uuid="94883631-a913-43e2-b182-ab8d77d0181e"/>
-				<imageExpression><![CDATA["jasper-reports/invoice_logo.png"]]></imageExpression>
+				<imageExpression><![CDATA["jasper-reports/istun.png"]]></imageExpression>
 			</image>
 			<textField pattern="EEEEE dd MMMMM yyyy">
 				<reportElement x="465" y="30" width="84" height="20" uuid="3836ce65-eca3-4cad-a6de-b1818def0a2b"/>
@@ -237,19 +237,19 @@
 				<textElement>
 					<font size="19" isBold="true"/>
 				</textElement>
-				<text><![CDATA[ABC]]></text>
+				<text><![CDATA[İSTUN]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="95" y="55" width="205" height="15" uuid="b8cc42fd-b569-497d-834d-7e854040ad18"/>
-				<text><![CDATA[+91234567894]]></text>
+				<text><![CDATA[+955555555555]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="95" y="25" width="205" height="15" uuid="c226e44d-3bb5-4145-b0b3-903bf1d79fde"/>
-				<text><![CDATA[ABC Bazaar]]></text>
+				<text><![CDATA[İstanbul Sağlık ve Teknoloji Üniversitesi]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="95" y="40" width="205" height="15" uuid="b96f7183-44f8-43ad-ba60-43d8fbf50b6e"/>
-				<text><![CDATA[India (IN)]]></text>
+				<text><![CDATA[Turkiye (TR)]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="70" y="120" width="100" height="30" uuid="3c090731-8ec3-4289-9840-b63289159d10"/>
