@@ -13,7 +13,7 @@ CREATE TABLE billing (
 CREATE TABLE customers (
                            id SERIAL PRIMARY KEY,
                            name VARCHAR(255) NOT NULL,
-                           phone_number VARCHAR(10) UNIQUE NOT NULL
+                           phone_number VARCHAR(20) UNIQUE NOT NULL
 );
 
 -- Tablo: inv_seq
