@@ -67,32 +67,9 @@ CREATE TABLE users (
                        password VARCHAR(255) NOT NULL
 );
 
--- Veri Ekleme
-INSERT INTO customers (id, name, phone_number) VALUES
-                                                   (24, 'Shahzaib', '7070564601'),
-                                                   (23, 'Rashid Makki', '7070564603'),
-                                                   (25, 'Shadab', '9818977363');
-
 INSERT INTO inv_seq (next_not_cached_value, minimum_value, maximum_value, start_value, increment, cache_size, cycle_option, cycle_count) VALUES
     (3001, 1, 99999999999999, 1, 1, 1000, 0, 0);
 
-INSERT INTO products (id, item_number, item_group, quantity, price) VALUES
-                                                                        (1, 'AX123456', 'Shirts', 60, 700.00),
-                                                                        (2, 'BX123456', 'Shirts', 100, 300.00),
-                                                                        (3, 'ZX123456', 'Shirts', 40, 800.00);
-
-INSERT INTO purchase (id, invoice, shop_and_address, total_items, total_amount, date_of_purchase) VALUES
-                                                                                                      (1, '123XB123', 'AB, Yamuna Nagar, Delhi', 50, 200000.00, '2023-05-30'),
-                                                                                                      (2, 'babab', 'abbaban', 100, 100000.00, '2023-05-29');
-
-INSERT INTO sales (id, inv_num, cust_id, price, quantity, total_amount, date, item_number) VALUES
-                                                                                               (28, 'INV-1', 23, 700.00, 4, 2800.00, '2023-06-03', 'AX123456'),
-                                                                                               (29, 'INV-1', 23, 800.00, 2, 1600.00, '2023-06-03', 'ZX123456'),
-                                                                                               (30, 'INV-2', 24, 700.00, 4, 2800.00, '2023-06-03', 'AX123456'),
-                                                                                               (31, 'INV-3', 25, 900.00, 2, 1800.00, '2023-06-03', 'AX123456'),
-                                                                                               (32, 'INV-3', 25, 800.00, 1, 800.00, '2023-06-03', 'ZX123456'),
-                                                                                               (33, 'INV-4', 23, 700.00, 2, 1400.00, '2023-06-04', 'AX123456'),
-                                                                                               (34, 'INV-5', 23, 300.00, 2, 600.00, '2023-06-04', 'BX123456');
 
 INSERT INTO users (id, username, password) VALUES
     (1, 'admin', 'admin');
