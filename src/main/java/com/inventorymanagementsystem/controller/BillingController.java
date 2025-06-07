@@ -272,8 +272,6 @@ public class BillingController implements Initializable {
         bill_quantity.setValue(null);
         bill_price.clear();
         bill_total_amount.clear();
-        bill_name.clear();
-        bill_phone.clear();
         bill_date.setValue(LocalDate.now());
     }
 

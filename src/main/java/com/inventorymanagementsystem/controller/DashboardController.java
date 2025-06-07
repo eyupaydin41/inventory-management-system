@@ -192,7 +192,7 @@ public class DashboardController implements Initializable {
     public void signOut(){
         signout_btn.getScene().getWindow().hide();
         try{
-        Parent root = FXMLLoader.load(getClass().getResource("login-view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/com/inventorymanagementsystem/login-view.fxml"));
         Scene scene = new Scene(root);
         Stage stage=new Stage();
             root.setOnMousePressed((event)->{

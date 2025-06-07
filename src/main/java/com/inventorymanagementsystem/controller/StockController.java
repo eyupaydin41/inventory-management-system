@@ -1,5 +1,6 @@
 package com.inventorymanagementsystem.controller;
 
+import com.inventorymanagementsystem.config.Database;
 import com.inventorymanagementsystem.entity.Product;
 import com.inventorymanagementsystem.service.ProductService;
 import javafx.collections.ObservableList;
@@ -14,9 +15,18 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -96,6 +106,22 @@ public class StockController implements Initializable {
             }
         } else {
             showAlert(Alert.AlertType.WARNING, "Uyarı", "Lütfen düzenlenecek ürünü seçiniz.");
+        }
+    }
+
+    public void printStocksDetails(){
+        Connection connection= Database.getInstance().connectDB();
+        String sql="SELECT * FROM products";
+        try{
+            JasperDesign jasperDesign= JRXmlLoader.load(this.getClass().getClassLoader().getResourceAsStream("jasper-reports/products.jrxml"));
+            JRDesignQuery updateQuery=new JRDesignQuery();
+            updateQuery.setText(sql);
+            jasperDesign.setQuery(updateQuery);
+            JasperReport jasperReport= JasperCompileManager.compileReport(jasperDesign);
+            JasperPrint jasperPrint= JasperFillManager.fillReport(jasperReport,null,connection);
+            JasperViewer.viewReport(jasperPrint ,false);
+        }catch (Exception err){
+            err.printStackTrace();
         }
     }
 

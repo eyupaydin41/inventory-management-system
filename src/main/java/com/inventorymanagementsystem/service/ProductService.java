@@ -138,7 +138,7 @@ public class ProductService {
                     return true;
                 } else {
                     conn.rollback();
-                    return false; // ürün bulunamadı
+                    return false;
                 }
             }
         } catch (SQLException e) {
