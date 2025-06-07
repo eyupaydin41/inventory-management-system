@@ -17,9 +17,9 @@
 2. **Veritabanı Bağlantı Ayarlarını Yapın**
    - `src/main/resources/application.properties` dosyasında veritabanı kullanıcı adı, şifre ve bağlantı adresini güncelleyin:
      ```
-     spring.datasource.url=jdbc:postgresql://localhost:5432/<veritabani_adi>
-     spring.datasource.username=<kullanıcı_adı>
-     spring.datasource.password=<şifre>
+     javafx.datasource.url=jdbc:postgresql://localhost:5432/<veritabani_adi>
+     javafx.datasource.username=<kullanıcı_adı>
+     javafx.datasource.password=<şifre>
      ```
 
 3. **Projeyi Derleyin**
