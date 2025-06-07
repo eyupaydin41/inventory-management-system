@@ -1,2 +1,6 @@
 target
 shade
+.idea/
+.settings/
+.classpath
+.project
