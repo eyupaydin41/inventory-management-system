@@ -217,9 +217,11 @@ public class DashboardController implements Initializable {
         billing_paneController.setSalesController(sales_paneController);
         billing_paneController.setCustomerController(customer_paneController);
         billing_paneController.setStockController(stock_paneController);
+        billing_paneController.setDashboardController(this);
         customer_paneController.setSalesController(sales_paneController);
         purchase_paneController.setStockController(stock_paneController);
         purchase_paneController.setBillingController(billing_paneController);
+        purchase_paneController.setDashboardController(this);
         Modules.exportAllToAll();
 
         setUsername();
