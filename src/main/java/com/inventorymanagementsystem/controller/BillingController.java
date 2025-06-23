@@ -381,7 +381,10 @@ public class BillingController implements Initializable {
             deleteBillingData();
             salesController.showSalesData();
             stockController.showProductData();
-            dashboardController.showDashboardData();
+            dashboardController.updateTotalItemsSoldThisMonthLeaf();
+            dashboardController.updateTotalSalesThisMonthLeaf();
+            dashboardController.updateTotalStocksLeaf();
+            dashboardController.updateTotalSoldLeaf();
 
             setInvoiceNum(salesController.getInvoiceNum());
             showAlert(Alert.AlertType.INFORMATION, "Message", "Data is successfully saved.");

@@ -84,6 +84,7 @@ public class PurchaseController implements Initializable {
     private final PurchaseService purchaseService = new PurchaseService();
     private StockController stockController;
     private BillingController billingController;
+    private DashboardController dashboardController;
 
     private Deque<PurchaseFormMemento> history = new LinkedList<>();
 
@@ -134,8 +135,6 @@ public class PurchaseController implements Initializable {
         purchase_date.setValue(date);
     }
 
-
-
     public void addPurchaseData() {
         if (purchase_name.getText().isBlank()
                 || purchase_quantity.getSelectionModel().isEmpty()
@@ -158,6 +157,8 @@ public class PurchaseController implements Initializable {
                 purchase_total_amount.setText(String.valueOf(quantity * price));
                 showPurchaseData();
                 stockController.showProductData();
+                dashboardController.updateTotalPurchaseLeaf();
+                dashboardController.updateTotalStocksLeaf();
                 purchaseClearData();
                 billingController.setAutoCompleteItemNumber();
             } else {
@@ -258,5 +259,9 @@ public class PurchaseController implements Initializable {
 
     public void setBillingController(BillingController billingController) {
         this.billingController = billingController;
+    }
+
+    public void setDashboardController(DashboardController dashboardController) {
+        this.dashboardController = dashboardController;
     }
 }

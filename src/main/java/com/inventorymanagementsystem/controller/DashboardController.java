@@ -104,6 +104,13 @@ public class DashboardController implements Initializable {
     private StockController stock_paneController;
 
     private DashboardComposite dashboardComposite;
+    private DashboardLeaf totalPurchaseLeaf;
+    private DashboardLeaf totalSoldLeaf;
+    private DashboardLeaf totalSalesThisMonthLeaf;
+    private DashboardLeaf totalItemsSoldThisMonthLeaf;
+    private DashboardLeaf totalSalesThisMonthNameLeaf;
+    private DashboardLeaf totalSalesItemsThisMonthNameLeaf;
+    private DashboardLeaf totalStocksLeaf;
 
     private final SalesService salesService = new SalesService();
     private final PurchaseService purchaseService = new PurchaseService();
@@ -168,6 +175,22 @@ public class DashboardController implements Initializable {
     public void showDashboardData(){
         dashboardComposite.update();
     }
+        
+    public void updateTotalPurchaseLeaf() {
+        if (totalPurchaseLeaf != null) totalPurchaseLeaf.update();
+    }
+    public void updateTotalSoldLeaf() {
+        if (totalSoldLeaf != null) totalSoldLeaf.update();
+    }
+    public void updateTotalSalesThisMonthLeaf() {
+        if (totalSalesThisMonthLeaf != null) totalSalesThisMonthLeaf.update();
+    }
+    public void updateTotalItemsSoldThisMonthLeaf() {
+        if (totalItemsSoldThisMonthLeaf != null) totalItemsSoldThisMonthLeaf.update();
+    }
+    public void updateTotalStocksLeaf() {
+        if (totalStocksLeaf != null) totalStocksLeaf.update();
+    }
 
     private void initializeDashboardComposite() {
         dashboardComposite = new DashboardComposite();
@@ -179,13 +202,21 @@ public class DashboardController implements Initializable {
         Supplier<String> monthNameSupplier = () -> monthInTurkish;
         Supplier<String> totalStocksSupplier = () -> String.valueOf(productService.getTotalStockQuantity());
 
-        dashboardComposite.add(new DashboardLeaf(dash_total_purchase, totalPurchaseSupplier));
-        dashboardComposite.add(new DashboardLeaf(dash_total_sold, totalSoldSupplier));
-        dashboardComposite.add(new DashboardLeaf(dash_total_sales_this_month, totalSalesThisMonthSupplier));
-        dashboardComposite.add(new DashboardLeaf(dash_total_items_sold_this_month, totalItemsSoldThisMonthSupplier));
-        dashboardComposite.add(new DashboardLeaf(dash_total_sales_this_month_name, monthNameSupplier));
-        dashboardComposite.add(new DashboardLeaf(dash_total_sales_items_this_month_name, monthNameSupplier));
-        dashboardComposite.add(new DashboardLeaf(dash_total_stocks, totalStocksSupplier));
+        totalPurchaseLeaf = new DashboardLeaf(dash_total_purchase, totalPurchaseSupplier);
+        totalSoldLeaf = new DashboardLeaf(dash_total_sold, totalSoldSupplier);
+        totalSalesThisMonthLeaf = new DashboardLeaf(dash_total_sales_this_month, totalSalesThisMonthSupplier);
+        totalItemsSoldThisMonthLeaf = new DashboardLeaf(dash_total_items_sold_this_month, totalItemsSoldThisMonthSupplier);
+        totalSalesThisMonthNameLeaf = new DashboardLeaf(dash_total_sales_this_month_name, monthNameSupplier);
+        totalSalesItemsThisMonthNameLeaf = new DashboardLeaf(dash_total_sales_items_this_month_name, monthNameSupplier);
+        totalStocksLeaf = new DashboardLeaf(dash_total_stocks, totalStocksSupplier);
+
+        dashboardComposite.add(totalPurchaseLeaf);
+        dashboardComposite.add(totalSoldLeaf);
+        dashboardComposite.add(totalSalesThisMonthLeaf);
+        dashboardComposite.add(totalItemsSoldThisMonthLeaf);
+        dashboardComposite.add(totalSalesThisMonthNameLeaf);
+        dashboardComposite.add(totalSalesItemsThisMonthNameLeaf);
+        dashboardComposite.add(totalStocksLeaf);
     }
 
 
